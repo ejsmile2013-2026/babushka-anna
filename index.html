@@ -25,14 +25,14 @@
     }
 
     .photo-circle {
-      width: 140px;
-      height: 140px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       object-fit: cover;
-      object-position: center 20%;
+      object-position: center 35%;
       margin-bottom: 18px;
-      border: 4px solid rgba(255,255,255,0.7);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      border: 4px solid rgba(255,255,255,0.75);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
       display: block;
       margin-left: auto;
       margin-right: auto;
@@ -393,6 +393,31 @@
       line-height: 1.7;
     }
 
+    .footer-legal {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-legal-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .footer-legal-links a {
+      color: #6a9a7a;
+      text-decoration: none;
+      font-size: 0.76rem;
+      transition: color 0.2s;
+    }
+    .footer-legal-links a:hover { color: #90c0a0; }
+    .footer-copyright {
+      font-size: 0.74rem;
+      color: #3a5a4a;
+      margin-top: 10px;
+    }
+
     /* ── MOBILE ── */
     @media (max-width: 600px) {
       header { padding: 36px 16px 32px; }
@@ -458,10 +483,28 @@
   </div>
   <p class="disclaimer">
     Информация на сайте — народные советы, передаваемые из поколения в поколение.
-    Не является медицинской рекомендацией.
-    При серьёзных симптомах обращайтесь к врачу.
+    Не является медицинской рекомендацией. При серьёзных симптомах обращайтесь к врачу.
   </p>
+  <div class="footer-legal">
+    <div class="footer-legal-links">
+      <a href="#" onclick="showPolicy('privacy'); return false;">Политика конфиденциальности</a>
+      <a href="#" onclick="showPolicy('terms'); return false;">Пользовательское соглашение</a>
+      <a href="mailto:drtouchonline@googlemail.com">Связаться с нами</a>
+    </div>
+    <div class="footer-copyright">
+      © 2026 Бабушка Анна. Все права защищены.<br>
+      Сайт носит исключительно информационный характер и не является публичной офертой.
+    </div>
+  </div>
 </footer>
+
+<!-- Модальные окна для юридических текстов -->
+<div id="policyModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;overflow-y:auto;">
+  <div style="background:#F5F0E8;max-width:600px;margin:40px auto;border-radius:16px;padding:32px 28px;position:relative;">
+    <button onclick="document.getElementById('policyModal').style.display='none'" style="position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#2D6A4F;">✕</button>
+    <div id="policyContent"></div>
+  </div>
+</div>
 
 <script>
 const TG = 'aibabushka40';
@@ -1169,6 +1212,49 @@ document.getElementById('sendBtn').addEventListener('click', () => {
 
 // ── Первый рендер ──
 render();
+
+// ── Юридические тексты ──
+function showPolicy(type) {
+  const texts = {
+    privacy: `<h2 style="font-family:Georgia;color:#2D6A4F;margin-bottom:16px;">Политика конфиденциальности</h2>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;">
+<strong>1. Общие положения</strong><br>
+Настоящий сайт («Бабушка Анна», babushka-anna.vercel.app) уважает вашу конфиденциальность. Мы не собираем и не храним личные данные пользователей.
+</p>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;margin-top:12px;">
+<strong>2. Какие данные мы не собираем</strong><br>
+Сайт не использует cookies для отслеживания, не собирает имена, email-адреса или номера телефонов. При переходе в Telegram — общение происходит в соответствии с политикой конфиденциальности Telegram.
+</p>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;margin-top:12px;">
+<strong>3. Контакт</strong><br>
+По вопросам: drtouchonline@googlemail.com
+</p>`,
+    terms: `<h2 style="font-family:Georgia;color:#2D6A4F;margin-bottom:16px;">Пользовательское соглашение</h2>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;">
+<strong>1. Общее</strong><br>
+Используя данный сайт, вы соглашаетесь с настоящим соглашением. Сайт предназначен для совершеннолетних пользователей.
+</p>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;margin-top:12px;">
+<strong>2. Характер информации</strong><br>
+Все рецепты и советы на сайте являются народными, передаваемыми из поколения в поколение. Они не являются медицинскими рекомендациями и не заменяют консультацию врача. Администрация сайта не несёт ответственности за последствия применения рецептов без предварительной консультации специалиста.
+</p>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;margin-top:12px;">
+<strong>3. Платные консультации</strong><br>
+Личные консультации проводятся в мессенджере Telegram. Стоимость и условия согласовываются индивидуально. Все платежи добровольны.
+</p>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;margin-top:12px;">
+<strong>4. Интеллектуальная собственность</strong><br>
+Все текстовые материалы сайта защищены авторским правом © 2026 Бабушка Анна.
+</p>
+<p style="font-size:0.9rem;line-height:1.7;color:#1A2E1A;margin-top:12px;">
+<strong>5. Контакт</strong><br>
+По вопросам: drtouchonline@googlemail.com
+</p>`
+  };
+  document.getElementById('policyContent').innerHTML = texts[type];
+  document.getElementById('policyModal').style.display = 'block';
+  document.getElementById('policyModal').scrollTop = 0;
+}
 </script>
 </body>
 </html>
