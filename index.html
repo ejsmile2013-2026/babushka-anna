@@ -125,15 +125,20 @@
 
     /* ── CATEGORIES ── */
     .categories {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      overflow-x: auto;
       padding: 16px 0 4px;
       margin-bottom: 20px;
+      scrollbar-width: none;
     }
 
+    .categories::-webkit-scrollbar { display: none; }
+
     .cat-btn {
-      padding: 10px 16px;
+      flex-shrink: 0;
+      padding: 8px 16px;
       border: 2px solid #2D6A4F;
       border-radius: 24px;
       background: transparent;
@@ -141,9 +146,9 @@
       font-size: 0.84rem;
       cursor: pointer;
       transition: all 0.18s;
+      white-space: nowrap;
       font-family: Arial, sans-serif;
       font-weight: 600;
-      text-align: center;
     }
 
     .cat-btn.active, .cat-btn:hover {
