@@ -2226,7 +2226,7 @@ async function handleBook() {
         },
         body: JSON.stringify({
           master_slug: 'anna',
-          service_id: curSvc?.id || null,
+          service_id: curSvc?.id ? parseInt(curSvc.id.replace('svc-', '')) : null,
           service_name: curSvc?.name || '',
           service_price: curSvc?.price || null,
           message: desc,
