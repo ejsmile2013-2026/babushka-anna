@@ -1244,7 +1244,7 @@
       <!-- Кнопка оплаты -->
       <div style="margin-top:16px">
         <button id="pay-btn" class="btn btn-primary" onclick="handleBook()" style="font-size:17px;padding:16px" disabled>
-          Перейти к оплате →
+          Оставить заявку →
         </button>
         <p style="text-align:center;font-size:12px;color:var(--hint);margin-top:8px">
           Опиши ситуацию выше — тогда кнопка станет активной
@@ -1738,7 +1738,7 @@ function mbFor(screenId, params = {}) {
     case 'home':    mbSet('Записаться к Анне'); break;
     case 'cat':     mbSet('Перейти к услугам'); break;
     case 'svc':     mbSet(`Записаться — ${(params.svc || curSvc)?.price} ₽`); break;
-    case 'book':    mbSet('Перейти к оплате →', false); break; // активируется при вводе
+    case 'book':    mbSet('Оставить заявку →', false); break; // активируется при вводе
     case 'confirm': mbSet('Закрыть'); break;
     case 'recipes': mbSet('Хочу личный совет'); break;
     case 'recipe':  mbSet('Хочу личный совет'); break;
