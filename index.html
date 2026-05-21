@@ -2207,22 +2207,48 @@ function showToast(msg, ms = 3000) {
    Для реальной оплаты: бот генерирует invoice, Mini App вызывает
    tg.openInvoice(link, callback). Подробнее — в CLAUDE.md.
 ================================================================ */
-function handleBook() {
+async function handleBook() {
   const desc = document.getElementById('f-desc').value.trim();
   if (desc.length < 10) { showToast('Расскажи немного больше о своей ситуации'); return; }
 
   tg.MainButton.showProgress(true);
   tg.MainButton.disable();
 
-  // СИМУЛЯЦИЯ: задержка 1.2 сек → экран подтверждения
-  // В продакшене здесь: fetch('/api/invoice', { svcId: curSvc.id })
-  //   .then(r => r.json())
-  //   .then(({ invoiceLink }) => tg.openInvoice(invoiceLink, handlePayResult))
-  setTimeout(() => {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/functions/v1/create-booking`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'x-telegram-init-data': tg.initData || '',
+        },
+        body: JSON.stringify({
+          master_slug: 'anna',
+          service_id: curSvc?.id || null,
+          service_name: curSvc?.name || '',
+          service_price: curSvc?.price || null,
+          message: desc,
+          format: selFmt || 'text',
+          initData: tg.initData || '',
+        }),
+      }
+    );
+    const data = await res.json();
+    if (data.booking_id) {
+      tg.MainButton.hideProgress();
+      tg.HapticFeedback.notificationOccurred('success');
+      go('confirm');
+    } else {
+      throw new Error(data.error || 'Unknown error');
+    }
+  } catch(e) {
     tg.MainButton.hideProgress();
-    tg.HapticFeedback.notificationOccurred('success');
-    go('confirm');
-  }, 1200);
+    tg.MainButton.enable();
+    showToast('Что-то пошло не так. Попробуй ещё раз.');
+    console.error(e);
+  }
 }
 
 function handlePayResult(status) {
