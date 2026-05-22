@@ -1807,7 +1807,7 @@ function onMainBtn() {
   switch (cur) {
     case 'home':
     case 'about':
-      go('cat', { catId: 'sleep' });
+      go('cat', { catId: DATA.cats[0]?.id });
       break;
     case 'cat': {
       const screen = document.getElementById('s-cat');
@@ -1859,15 +1859,19 @@ function updateBottomNav(screenId) {
 
 function navTo(screenId) {
   haptic('light');
+  // Деактивируем текущий экран перед переключением
+  const curId = stack.length ? stack[stack.length - 1].id : 'home';
+  const curEl = document.getElementById('s-' + curId);
+  if (curEl) curEl.classList.remove('is-active', 'is-prev', 'with-nav');
+
+  stack = [{ id: 'home', params: {} }];
+
   if (screenId === 'home') {
     goHome();
-  } else if (screenId === 'cat') {
-    stack = [{ id: 'home', params: {} }];
-    go('cat', { catId: DATA.cats[0]?.id });
-  } else {
-    stack = [{ id: 'home', params: {} }];
-    go(screenId);
+    return;
   }
+  const params = screenId === 'cat' ? { catId: DATA.cats[0]?.id } : {};
+  go(screenId, params);
 }
 
 function go(screenId, params = {}) {
