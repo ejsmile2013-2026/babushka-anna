@@ -1020,6 +1020,42 @@
     }
     .offer-skip:active { color: var(--text); }
 
+    /* ============================================================
+       НИЖНЯЯ НАВИГАЦИЯ
+    ============================================================ */
+    #bottom-nav {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 58px;
+      background: var(--card);
+      border-top: 1.5px solid var(--border);
+      display: none;
+      align-items: stretch;
+      z-index: 200;
+      transform: translateZ(0);
+    }
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      color: var(--hint);
+      font-size: 10px;
+      font-family: inherit;
+      border: none;
+      background: none;
+      padding: 0;
+      transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-tab.active { color: var(--accent); }
+    .nav-tab-icon { font-size: 21px; line-height: 1; }
+    .screen.with-nav {
+      padding-bottom: calc(var(--mb-h) + var(--safe-b) + 8px + 58px);
+    }
   </style>
 </head>
 <body>
@@ -1329,26 +1365,26 @@
 
     <div class="about-hero">
       <img src="anna.png" class="anna-ava anna-ava--L" alt="Бабушка Анна">
-      <div class="about-name">Я — Анна</div>
+      <div class="about-name">Бабушка Анна</div>
       <div class="about-sub">
-        Всю жизнь собираю травы и помогаю людям.
-        Моя мама научила меня слушать природу — и я передаю это дальше.
+        Народный целитель из солнечного Туркменистана.
+        Пятьдесят лет собираю травы и помогаю людям — с любовью и заботой.
       </div>
     </div>
 
     <div class="section" style="padding-top:0">
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-num">40+</div>
+          <div class="stat-num">50+</div>
           <div class="stat-lbl">лет с травами</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num">3 200+</div>
-          <div class="stat-lbl">человек получили совет</div>
+          <div class="stat-num">3 поколения</div>
+          <div class="stat-lbl">семейных рецептов</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num">12 400</div>
-          <div class="stat-lbl">в нашей группе</div>
+          <div class="stat-num">тысячи</div>
+          <div class="stat-lbl">получили помощь</div>
         </div>
       </div>
     </div>
@@ -1356,16 +1392,18 @@
     <div class="divider"></div>
 
     <div class="section">
-      <div class="sec-title">История</div>
+      <div class="sec-title">История Анны</div>
       <p style="font-size:14px;line-height:1.7;color:var(--hint)">
-        Я выросла в деревне, где каждая хозяйка знала: от кашля — малина,
-        от живота — ромашка, от бессонницы — валерьяна. Это не суеверия —
-        это опыт многих поколений.
+        Я выросла в Туркменистане, где природа щедра на целебные травы.
+        Бабушка учила меня с детства: от кашля — чабрец, от живота — ромашка,
+        от бессонницы — валериана. Эти знания передавались в нашей семье
+        три поколения.
       </p>
       <p style="font-size:14px;line-height:1.7;color:var(--hint);margin-top:11px">
-        Уже 40 лет помогаю людям народными средствами. Не вместо врача — рядом.
-        Потому что мудрость природы и современная медицина прекрасно дополняют
-        друг друга.
+        Пятьдесят лет я помогаю людям народными средствами. Не вместо врача —
+        рядом с ним. Потому что мудрость природы и современная медицина
+        прекрасно дополняют друг друга. Каждый человек особенный —
+        и рецепт для каждого свой.
       </p>
     </div>
 
@@ -1403,6 +1441,26 @@
 
   </div><!-- /s-about -->
 
+
+  <!-- Нижняя навигация -->
+  <div id="bottom-nav">
+    <button class="nav-tab active" id="nav-home" onclick="navTo('home')">
+      <div class="nav-tab-icon">🏠</div>
+      <div>Главная</div>
+    </button>
+    <button class="nav-tab" id="nav-recipes" onclick="navTo('recipes')">
+      <div class="nav-tab-icon">📖</div>
+      <div>Рецепты</div>
+    </button>
+    <button class="nav-tab" id="nav-book" onclick="navTo('cat')">
+      <div class="nav-tab-icon">📅</div>
+      <div>Записаться</div>
+    </button>
+    <button class="nav-tab" id="nav-about" onclick="navTo('about')">
+      <div class="nav-tab-icon">👵</div>
+      <div>Об Анне</div>
+    </button>
+  </div>
 
   <!-- Веб-кнопка — аналог Telegram MainButton для браузера -->
   <div id="web-main-btn">
@@ -1776,6 +1834,37 @@ function onMainBtn() {
 /* ================================================================
    НАВИГАЦИЯ
 ================================================================ */
+const NAV_SCREENS = ['home', 'cat', 'recipes', 'about'];
+const NAV_TAB_MAP = { home: 'nav-home', cat: 'nav-book', recipes: 'nav-recipes', about: 'nav-about' };
+
+function updateBottomNav(screenId) {
+  const nav = document.getElementById('bottom-nav');
+  const activeEl = document.querySelector('.screen.is-active');
+  if (NAV_SCREENS.includes(screenId)) {
+    nav.style.display = 'flex';
+    if (activeEl) activeEl.classList.add('with-nav');
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    const tabId = NAV_TAB_MAP[screenId];
+    if (tabId) document.getElementById(tabId)?.classList.add('active');
+  } else {
+    nav.style.display = 'none';
+    if (activeEl) activeEl.classList.remove('with-nav');
+  }
+}
+
+function navTo(screenId) {
+  haptic('light');
+  if (screenId === 'home') {
+    goHome();
+  } else if (screenId === 'cat') {
+    stack = [{ id: 'home', params: {} }];
+    go('cat', { catId: DATA.cats[0]?.id });
+  } else {
+    stack = [{ id: 'home', params: {} }];
+    go(screenId);
+  }
+}
+
 function go(screenId, params = {}) {
   if (screenId === 'home') { goHome(); return; }
 
@@ -1801,6 +1890,7 @@ function go(screenId, params = {}) {
   }
 
   mbFor(screenId, params);
+  updateBottomNav(screenId);
 }
 
 function goBack() {
@@ -2265,8 +2355,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Обычный запуск — сразу главный экран
     stack = [{ id: 'home', params: {} }];
     const home = document.getElementById('s-home');
-    home.classList.add('is-active');
+    home.classList.add('is-active', 'with-nav');
     requestAnimationFrame(() => home.classList.remove('no-anim'));
+    updateBottomNav('home');
   }
 
   haptic('success');
