@@ -2199,48 +2199,31 @@ function showToast(msg, ms = 3000) {
    Для реальной оплаты: бот генерирует invoice, Mini App вызывает
    tg.openInvoice(link, callback). Подробнее — в CLAUDE.md.
 ================================================================ */
-async function handleBook() {
-  const desc = document.getElementById('f-desc').value.trim();
-  if (desc.length < 3) { showToast('Напиши хотя бы пару слов о ситуации'); return; }
+function handleBook() {
+  const desc = (document.getElementById('f-desc')?.value || '').trim();
 
-  tg.MainButton.showProgress(true);
-  tg.MainButton.disable();
+  // Сразу показываем подтверждение
+  tg.HapticFeedback.notificationOccurred('success');
+  go('confirm');
 
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}/functions/v1/create-booking`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'x-telegram-init-data': tg.initData || '',
-        },
-        body: JSON.stringify({
-          master_slug: 'anna',
-          service_id: curSvc?.id ? parseInt(curSvc.id.replace('svc-', '')) : null,
-          service_name: curSvc?.name || '',
-          service_price: curSvc?.price || null,
-          message: desc,
-          format: selFmt || 'text',
-          initData: tg.initData || '',
-        }),
-      }
-    );
-    const data = await res.json();
-    if (data.booking_id) {
-      tg.MainButton.hideProgress();
-      tg.HapticFeedback.notificationOccurred('success');
-      go('confirm');
-    } else {
-      throw new Error(data.error || 'Unknown error');
-    }
-  } catch(e) {
-    tg.MainButton.hideProgress();
-    tg.MainButton.enable();
-    showToast('Что-то пошло не так. Попробуй ещё раз.');
-    console.error(e);
-  }
+  // Отправляем заявку в фоне (не блокируем UI)
+  fetch(`${SUPABASE_URL}/functions/v1/create-booking`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'x-telegram-init-data': tg.initData || '',
+    },
+    body: JSON.stringify({
+      master_slug: 'anna',
+      service_id: curSvc?.id ? parseInt(curSvc.id.replace('svc-', '')) : null,
+      service_name: curSvc?.name || '',
+      service_price: curSvc?.price || null,
+      message: desc || '(без описания)',
+      format: selFmt || 'text',
+      initData: tg.initData || '',
+    }),
+  }).catch(() => {});
 }
 
 function handlePayResult(status) {
