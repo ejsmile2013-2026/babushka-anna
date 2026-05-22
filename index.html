@@ -1809,9 +1809,14 @@ function onMainBtn() {
     case 'about':
       go('cat', { catId: 'sleep' });
       break;
-    case 'cat':
-      document.getElementById('s-cat').scrollTo({ top: 9999, behavior: 'smooth' });
+    case 'cat': {
+      const screen = document.getElementById('s-cat');
+      const svcList = document.getElementById('cat-svc-list');
+      if (screen && svcList) {
+        screen.scrollTo({ top: svcList.offsetTop - 8, behavior: 'smooth' });
+      }
       break;
+    }
     case 'svc':
       go('book', { svc: curSvc });
       break;
