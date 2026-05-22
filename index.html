@@ -1247,7 +1247,7 @@
           Оставить заявку →
         </button>
         <p style="text-align:center;font-size:12px;color:var(--hint);margin-top:8px">
-          Опиши ситуацию выше — тогда кнопка станет активной
+          Напиши пару слов выше — кнопка станет активной
         </p>
       </div>
     </div>
@@ -1261,12 +1261,12 @@
     <div class="confirm-wrap">
       <div class="confirm-check">✅</div>
       <img src="anna.png" class="anna-ava anna-ava--M" alt="Анна">
-      <div class="confirm-title">Получила, голубчик!</div>
+      <div class="confirm-title">Заявка принята, дорогая!</div>
       <p class="confirm-body" id="confirm-body">
-        Твой вопрос уже у меня. Отвечу сегодня до вечера.
+        Анна получила твою заявку и свяжется с тобой в Telegram в течение 24 часов 🌿
       </p>
       <div class="response-tag" style="width:100%;max-width:300px;justify-content:center">
-        <span>⏱</span><span>Анна ответит сегодня до вечера</span>
+        <span>⏱</span><span>Анна ответит в течение 24 часов</span>
       </div>
       <button class="btn btn-ghost" onclick="goHome()" style="margin-top:4px">
         Вернуться в каталог
@@ -2173,10 +2173,10 @@ function filterRecipes() {
   renderRecList();
 }
 
-/* Активируем MainButton когда пользователь написал минимум 10 символов */
+/* Активируем MainButton когда пользователь написал минимум 3 символа */
 function onDescInput() {
   const v = document.getElementById('f-desc').value.trim();
-  const ready = v.length >= 10;
+  const ready = v.length >= 3;
   if (ready) tg.MainButton.enable(); else tg.MainButton.disable();
   const btn = document.getElementById('pay-btn');
   if (btn) {
@@ -2205,7 +2205,7 @@ function showToast(msg, ms = 3000) {
 ================================================================ */
 async function handleBook() {
   const desc = document.getElementById('f-desc').value.trim();
-  if (desc.length < 10) { showToast('Расскажи немного больше о своей ситуации'); return; }
+  if (desc.length < 3) { showToast('Напиши хотя бы пару слов о ситуации'); return; }
 
   tg.MainButton.showProgress(true);
   tg.MainButton.disable();
